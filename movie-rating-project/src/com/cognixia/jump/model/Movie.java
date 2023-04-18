@@ -1,15 +1,17 @@
 package com.cognixia.jump.model;
 
+import java.text.DecimalFormat;
+
 public class Movie {
-    
+	    
     private int movieId;
     private String title;
     private int releaseDate;
-    private double ratingAvg;
+    private float ratingAvg;
     private int ratingCount;
 
 
-    public Movie(int movieId, String title, int releaseDate, double ratingAvg, int ratingCount) {
+    public Movie(int movieId, String title, int releaseDate, float ratingAvg, int ratingCount) {
         this.movieId = movieId;
         this.title = title;
         this.releaseDate = releaseDate;
@@ -45,7 +47,7 @@ public class Movie {
         return this.ratingAvg;
     }
 
-    public void setRatingAvg(double ratingAvg) {
+    public void setRatingAvg(float ratingAvg) {
         this.ratingAvg = ratingAvg;
     }
 

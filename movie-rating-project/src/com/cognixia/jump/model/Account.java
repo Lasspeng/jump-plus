@@ -13,7 +13,7 @@ import com.cognixia.jump.connection.ConnectionManager;
 
 public class Account {
 
-    private static final String PATTERN = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
+    private static final String PATTERN = "^(.+)@(\\S+)$";
     private Connection conn;
     
     private int id;
@@ -38,23 +38,24 @@ public class Account {
 		createList();
     }
 
-    
-
-    public Account(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-
-        try {
+    public Account(String username, String password) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.list = new ArrayList<AccountMovie>();
+		
+		try {
 			this.conn = ConnectionManager.getConnection();
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-    }
+		createList();
+		this.id = getAccountId(username, password);
+	}
 
 
 
-    public int getId() {
+	public int getId() {
         return this.id;
     }
 
@@ -95,19 +96,30 @@ public class Account {
     }
 
     public static boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile(PATTERN);
-        Matcher matcher = pattern.matcher(email);
-        
-        if (matcher.find())
-            return true;
-        else
-            return false; 
+        Pattern pattern = Pattern.compile(Account.PATTERN);
+        return pattern.matcher(email).find();
+    }
+    
+    private int getAccountId(String username, String password) {
+    	int accountId = 0;
+    	try (Statement stmt = conn.createStatement();) {
+    		ResultSet rs = stmt.executeQuery("SELECT id FROM account WHERE username = " + "'" + username + "' AND password = " + "'" + password + "'");
+    		
+    		while (rs.next()) {
+    			accountId = rs.getInt("id");
+    		}
+    		
+    		return accountId;
+    	} catch (SQLException e) {
+    		e.printStackTrace();
+    	}
+		return accountId;
     }
 
     private void createList() {
 
         try(Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT * FROM account_movie WHERE account_id " + this.id);
+        ResultSet rs = stmt.executeQuery("SELECT * FROM account_movie WHERE account_id = " + this.id);
         ) {
             while (rs.next()) {
                 int accountId = rs.getInt("account_id");
@@ -126,20 +138,51 @@ public class Account {
         try (Statement stmt = conn.createStatement()) {
             int updated = stmt.executeUpdate("INSERT INTO account_movie values(" + getId() + ", " + movieId + ", " + rating + ")");
 
-            if (updated != 0) {
-                System.out.println("Show successfully added to list.");
-                return true;
+            if (updated == 0) {
+            	System.out.println("Movie cannot be rated. Try again.");
+            	return false;                
             }
         } catch (SQLException e) {
-            System.out.println("Show cannot be added to list. Try again.");
+        	System.out.println("Movie cannot be rated. Try again.");
+        	return false;
+        }
+        
+        float ratingAverage = 0;
+        int ratingCount = 0;
+        // Get current rating numbers for the movie being rated
+        try(Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT rating_avg, rating_count FROM movie WHERE id = " + movieId);
+        ) {
+            while(rs.next()) {
+                ratingAverage = rs.getFloat("rating_avg");
+                ratingCount = rs.getInt("rating_count");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
+        int newRatingCount = ratingCount + 1;
+        double newRatingAvg = ((ratingAverage * ratingCount) + rating) / newRatingCount;
+        // Add rating changes to the movie in the movie table
+        try(Statement stmt = conn.createStatement();) {
+            int updated2 = stmt.executeUpdate("UPDATE movie SET rating_avg = " + newRatingAvg + ", rating_count = " + newRatingCount + " WHERE id = " + movieId);
+
+            if (updated2 != 0) {
+                System.out.println("Movie has been successfully rated.");
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            System.out.println("Movie cannot be rated. Try again.");
             return false;
         }
-        return false;
     }
 
     public boolean updateMovieInList(int movieId, int rating) throws SQLException {
         int updated = 0;
-        double ratingAverage = 0;
+        float ratingAverage = 0;
         int ratingCount = 0;
 
         // Get current rating numbers for the movie about to be rated
@@ -147,7 +190,7 @@ public class Account {
             ResultSet rs = stmt.executeQuery("SELECT rating_avg, rating_count FROM movie WHERE id = " + movieId);
         ) {
             while(rs.next()) {
-                ratingAverage = rs.getDouble("rating_avg");
+                ratingAverage = rs.getFloat("rating_avg");
                 ratingCount = rs.getInt("rating_count");
             }
 
