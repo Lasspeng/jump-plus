@@ -184,6 +184,10 @@ public class GradeBookProject {
                         System.out.println((counter + 1) + ". EXIT");
 
                         int studentChoice = sc.nextInt();
+                        int studentChoiceId = 0;
+                        if (studentChoice < counter) {
+                        studentChoiceId = classroom.get(studentChoice - 1).getStudentId();
+                        }
                         if (studentChoice == counter) {
 
                             System.out.println("+============================================================================+");
@@ -202,7 +206,7 @@ public class GradeBookProject {
                             System.out.println("Select student to add.");
                             int studentAddChoice = sc.nextInt();
                             if (studentAddChoice == students.size() + 1) break;
-                            teacherAcc.addStudentToCourse(studentChoice,
+                            teacherAcc.addStudentToCourse(studentAddChoice,
                                     classId);
                         } else if (studentChoice < counter) {
                             System.out.println("Do you want to update this " +
@@ -215,12 +219,12 @@ public class GradeBookProject {
                             if (newChoice == 1) {
                             System.out.println("What new grade do you want to" +
                                     " give (in decimal format)?");
-                            int newGrade = sc.nextInt();
-                            teacherAcc.addGrade(newGrade, studentChoice,
+                            double newGrade = sc.nextDouble();
+                            teacherAcc.addGrade(newGrade, studentChoiceId,
                                     classId);
                             break;
                             } else if (newChoice == 2) {
-                                teacherAcc.removeStudentFromCourse(studentChoice, classId);
+                                teacherAcc.removeStudentFromCourse(studentChoiceId, classId);
                                 break;
                             }
                         } else break;

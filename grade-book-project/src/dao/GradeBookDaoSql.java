@@ -42,7 +42,7 @@ public class GradeBookDaoSql {
 
         try (Statement stmt = conn.createStatement();
         ) {
-            ResultSet rs = stmt.executeQuery("SELECT s" +
+            ResultSet rs = stmt.executeQuery("SELECT s.id, s" +
                     ".name, sc.grade, " +
                     "sc" +
                     ".grade_count FROM student_course sc JOIN student s ON sc" +
@@ -50,11 +50,12 @@ public class GradeBookDaoSql {
 
 
             while (rs.next()) {
+                int id = rs.getInt("s.id");
                 String name = rs.getString("s.name");
                 double grade = rs.getDouble("sc.grade");
                 int gradeCount = rs.getInt("sc.grade_count");
 
-                StudentClassInfo student = new StudentClassInfo(name, grade,
+                StudentClassInfo student = new StudentClassInfo(id, name, grade,
                         gradeCount);
                 classroom.add(student);
             }
@@ -71,7 +72,7 @@ public class GradeBookDaoSql {
 
         try (Statement stmt = conn.createStatement();
         ) {
-            ResultSet rs = stmt.executeQuery("SELECT s" +
+            ResultSet rs = stmt.executeQuery("SELECT s.id, s" +
                     ".name, sc.grade, " +
                     "sc" +
                     ".grade_count FROM student_course sc JOIN student s ON sc" +
@@ -79,11 +80,12 @@ public class GradeBookDaoSql {
                     " ORDER BY sc.grade DESC");
 
             while (rs.next()) {
+                int id = rs.getInt("s.id");
                 String name = rs.getString("s.name");
                 double grade = rs.getDouble("sc.grade");
                 int gradeCount = rs.getInt("sc.grade_count");
 
-                StudentClassInfo student = new StudentClassInfo(name, grade,
+                StudentClassInfo student = new StudentClassInfo(id, name, grade,
                         gradeCount);
                 classroom.add(student);
             }
