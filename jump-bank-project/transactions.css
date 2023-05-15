@@ -1,0 +1,18 @@
+#checkingsTrans, #savingsTrans {
+    border: solid 1px rgb(198, 193, 193);
+    margin-top: 23px;
+    padding-left: 10px;
+}
+
+a {
+    text-decoration:none;
+}
+
+.headers {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    /* justify-content: center; */
+    flex-wrap: wrap;
+    text-align: center;
+}

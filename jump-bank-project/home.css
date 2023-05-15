@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+#balance {
+    display: flex;
+    flex-direction: row;
+    gap: 55px;
+    margin: 15px;
+}
+
+a {
+    text-decoration:none;
+}
+
+h2 {
+    color: lightskyblue;
+}
