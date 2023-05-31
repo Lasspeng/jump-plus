@@ -1,0 +1,53 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "first_name": "John",
+      "last_name": "Doe",
+      "email": "JohnDoe@gmail.com",
+      "password": "JohnD",
+      "orders": [
+        [
+          {
+            "name": "Hello Kitty Pillow",
+            "price": 19.99
+          }
+        ],
+        [
+          {
+            "name": "Chime 12 Inch Mattress",
+            "price": 229.99
+          }
+        ],
+        [
+          {
+            "name": "Chime 12 Inch Mattress",
+            "price": 229.99
+          },
+          {
+            "name": "Altari Sofa",
+            "price": 399.99
+          },
+          {
+            "name": "Wystfield TV Stand",
+            "price": 730
+          }
+        ],
+        [
+          {
+            "name": "Safavieh Rime Mirror",
+            "price": 62.99
+          }
+        ]
+      ]
+    },
+    {
+      "id": 2,
+      "first_name": "Ada",
+      "last_name": "Lovelace",
+      "email": "AdaLovelace@yahoo.com",
+      "password": "AdaL",
+      "orders": []
+    }
+  ]
+}
